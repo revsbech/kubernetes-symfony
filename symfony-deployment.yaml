@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: symfony
+  annotations:
+    pod.alpha.kubernetes.io/init-containers: '[{
+            "name": "install",
+            "image": "revsbech/symfonydemo",
+            "command": ["cp", "-a", "/var/www/application", "/app"],
+            "volumeMounts": [
+                {
+                    "name": "workdir",
+                    "mountPath": "/app"
+                }
+            ]
+        }
+    ]'
+
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: symfony
+    spec:
+      containers:
+      - name: nginx
+        image: pcodk/nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+         - mountPath: /var/www/application
+           name: workdir   
+      - name: php
+        image: pcodk/php7
+        volumeMounts:
+         - mountPath: /var/www/application
+           name: workdir        
+      volumes:
+       - name: workdir
+         emptyDir: {}

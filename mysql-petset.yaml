@@ -1,0 +1,32 @@
+apiVersion: apps/v1alpha1
+kind: PetSet
+metadata:
+  name: mysql
+spec:
+  serviceName: "mysql"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mysql
+      annotations:
+        pod.alpha.kubernetes.io/initialized: "true"
+    spec:
+      terminationGracePeriodSeconds: 0
+      volumes:
+      - name: mysqldata
+        hostPath:
+          path: /mysqldata
+      containers:
+      - name: mysql
+        image: mariadb:10.1
+        env: 
+        - name: MYSQL_ROOT_PASSWORD
+          value: kaffe
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysqldata
+          mountPath: /var/lib/mysql
+
