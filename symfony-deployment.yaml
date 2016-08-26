@@ -2,19 +2,6 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: symfony
-  annotations:
-    pod.alpha.kubernetes.io/init-containers: '[{
-            "name": "install",
-            "image": "revsbech/symfonydemo",
-            "command": ["cp", "-a", "/var/www/application", "/app"],
-            "volumeMounts": [
-                {
-                    "name": "workdir",
-                    "mountPath": "/app"
-                }
-            ]
-        }
-    ]'
 
 spec:
   replicas: 1
@@ -22,6 +9,19 @@ spec:
     metadata:
       labels:
         app: symfony
+      annotations:
+        pod.alpha.kubernetes.io/init-containers: '[{
+          "name": "install",
+          "image": "revsbech/symfonydemo",
+          "command": ["cp", "-a", "/var/www/application", "/"],
+          "volumeMounts": [
+            {
+                "name": "workdir",
+                "mountPath": "/application"
+            }
+          ]
+        }
+      ]'
     spec:
       containers:
       - name: nginx
