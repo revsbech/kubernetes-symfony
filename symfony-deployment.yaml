@@ -36,6 +36,10 @@ spec:
         volumeMounts:
          - mountPath: /var/www/application
            name: workdir        
+      - name: mailhog
+        image: mailhog/mailhog
+        ports:
+        - containerPort: 8025
       volumes:
        - name: workdir
          emptyDir: {}
